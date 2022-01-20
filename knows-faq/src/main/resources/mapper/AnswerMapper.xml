@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhangbin.knows.faq.mapper.AnswerMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="answerCommentMap" type="cn.zhangbin.knows.commons.model.Answer">
+        <id column="id" property="id" />
+        <result column="content" property="content" />
+        <result column="like_count" property="likeCount" />
+        <result column="user_id" property="userId" />
+        <result column="user_nick_name" property="userNickName" />
+        <result column="quest_id" property="questId" />
+        <result column="createtime" property="createtime" />
+        <result column="accept_status" property="acceptStatus" />
+        <!-- 上面是查询结果对应Answer对象的映射关系-->
+        <!-- 下面配置的是查询结果对应Answer中Comment集合的映射关系-->
+        <collection property="comments" ofType="cn.zhangbin.knows.commons.model.Comment">
+            <id column="comment_id" property="id"/>
+            <result column="comment_user_id" property="userId"/>
+            <result column="comment_user_nick_name" property="userNickName"/>
+            <result column="comment_content" property="content"/>
+            <result column="comment_answer_id" property="answerId"/>
+            <result column="comment_createtime" property="createtime"/>
+        </collection>
+    </resultMap>
+    <!--select标签中id对应接口中的方法名-->
+    <select id="findAnswersWithCommentByQuestionId" resultMap="answerCommentMap">
+        SELECT
+        a.id,
+        a.content,
+        a.like_count,
+        a.user_id,
+        a.user_nick_name,
+        a.quest_id,
+        a.createtime,
+        a.accept_status,
+        c.id             comment_id,
+        c.user_id        comment_user_id,
+        c.user_nick_name comment_user_nick_name,
+        c.answer_id      comment_answer_id,
+        c.content        comment_content,
+        c.createtime     comment_createtime
+        FROM answer a
+        LEFT JOIN comment c ON a.id=c.answer_id
+        WHERE a.quest_id=#{id}
+        ORDER BY a.id,c.createtime
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件上传演示</title>
+    <script src="bower_components/jquery/dist/jquery.min.js" ></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <form id="demoForm" method="post" enctype="multipart/form-data" action="/upload/file">
+        <div>
+            <label>选择上传文件:  <input id="imageFile" type="file" name="imageFile"></label>
+        </div>
+        <button type="submit">确认上传</button>
+    </form>
+    <img id="image" src="http://localhost:8899/a.jpg" alt="">
+</body>
+<script>
+    //jquery代码的表单提交时间
+    $("#demoForm").submit(function () {
+        //获取用户选中的所有图片(获得数组)
+        let files = document.getElementById("imageFile").files;
+        if (files.length>0){
+            //获取用户选中的唯一图片
+            let file = file[0];
+            //开始上传这个图片
+            uploadImage(file);
+        }
+        return false;
+    });
+    //将file上传到服务器的方法
+    function uploadImage(file) {
+        //定义一个表单
+        let form = new FormData();
+        //将图片添加到表单中
+        form.append("imageFile",file);
+        //异步提交
+        axios({
+            url:"/upload/file",
+            method:"post",
+            data:form
+        }).then(function (response) {
+            $("#image").attr("src",response.data);
+            alert(response.data);
+        })
+    }
+</script>
+</html>

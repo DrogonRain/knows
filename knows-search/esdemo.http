@@ -1,0 +1,12 @@
+### 三个#表示注释,同时表示分隔符
+### 每隔请求开始之前,必须有分隔符
+GET http://localhost:9200
+
+### 调用ES的分词功能ik_max_word比ik_smart获得的分词词汇更多,但占用内存过大,依照项目进行选择
+POST http://localhost:9200/_analyze
+Content-Type: application/json
+
+{
+  "text": "我爱北京天安门",
+  "analyzer": "ik_smart"
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+</body>
+<script src="bower_components/jquery/dist/jquery.js" ></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js" ></script>
+<script src="bower_components/vue/dist/vue.js"></script>
+<script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+<script>
+    // jquery 框架也提供了一个页面加载完毕之后立即运行的方法
+    $(function(){
+        //测试从localStorage中获得JWT,params用于Get请求 data用于Post请求
+        let token=window.localStorage.getItem("accessToken");
+        console.log(token);
+        axios({
+            url:"http://localhost:9000/v1/home",
+            method:"GET",
+            params:{
+                "accessToken":token
+            }
+        }).then(function (response) {
+            //response.data是要跳转的首页路径(或是学生或是老师)
+            location.href = response.data;
+        })
+    })
+</script>
+</html>

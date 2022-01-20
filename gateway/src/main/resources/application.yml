@@ -1,0 +1,40 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true #�Ƿ������ע���ڷ���������,ͨ��serviceId ת���������ҵ��
+          lower-case-service-id: true
+      routes: # ��ʼ·������
+        - id: geteway-search
+          uri: lb://search-service
+          predicates:
+            - Path=/v3/**
+        - id: geteway-auth
+          uri: lb://auth-service
+          predicates:
+            - Path=/oauth/**
+        - id: geteway-faq
+          uri: lb://faq-service
+          predicates:
+            - Path=/v2/**
+        - id: geteway-sys
+          uri: lb://sys-service
+          predicates:
+            - Path=/v1/**
+        - id: gateway-resource #·�����õ����ƺ;�������޹�
+          # resource-server·�ɵķ�����������
+          # lb: ��Load Balance(���ؾ���)����д
+          uri: lb://resource-server
+          # ·�ɵ�·������
+          # ��ʾ�������localhost:9000/image/xxxx
+          # ���൱�ڷ���resource-server�����е�������
+          predicates:
+            - Path=/image/**
